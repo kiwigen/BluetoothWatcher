@@ -1,4 +1,4 @@
-using InTheHand.Bluetooth;
+using InTheHand.Bluetooth;//https://github.com/inthehand/32feet -- License in ./Licenses
 
 namespace BluetoothWatcher;
 
