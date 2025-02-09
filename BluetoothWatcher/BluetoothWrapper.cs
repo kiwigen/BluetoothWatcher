@@ -15,7 +15,7 @@ public class BluetoothWrapper(BluetoothDevice device)
     }
 
     public void MakeLowBatteryWarningToast()
-    {
+    { 
         _triggerFullLevelMessage = true;
         Toast.MakeToast($"{device.Name} Battery Level Warning", $"{device.Name} battery level is below 25%!");
     }
