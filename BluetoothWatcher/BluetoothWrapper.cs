@@ -1,10 +1,11 @@
 using InTheHand.Bluetooth;
-using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace BluetoothWatcher;
 
 public class BluetoothWrapper(BluetoothDevice device)
 {
+    private bool _triggerFullLevelMessage;
+
     public async Task<byte> GetBatterylevel()
     {
         var service = await device.Gatt.GetPrimaryServiceAsync(GattServiceUuids.Battery);
@@ -13,19 +14,18 @@ public class BluetoothWrapper(BluetoothDevice device)
         return batteryValue[0];
     }
 
-    public void MakeLowBatteryWarningToast()=>
-        MakeToast($"{device.Name} Battery Level Warning",$"{device.Name} battery level is below 25%!");
-        
-    public void MakeFullBatteryInfoToast()=>
-        MakeToast($"{device.Name} Battery Level Info",$"{device.Name} battery level is 95% or higher!");
-
-    private void MakeToast(string title, string body)
+    public void MakeLowBatteryWarningToast()
     {
-        new ToastContentBuilder()
-            .AddArgument("action", "viewConversation")
-            .AddArgument("conversationId", 9813)
-            .AddText(title)
-            .AddText(body)
-            .Show();
+        _triggerFullLevelMessage = true;
+        Toast.MakeToast($"{device.Name} Battery Level Warning", $"{device.Name} battery level is below 25%!");
+    }
+
+    public void MakeFullBatteryInfoToast()
+    {
+        if (_triggerFullLevelMessage)
+        {
+            Toast.MakeToast($"{device.Name} Battery Level Info", $"{device.Name} battery level is 95% or higher!");
+            _triggerFullLevelMessage = false;
+        }
     }
 }
